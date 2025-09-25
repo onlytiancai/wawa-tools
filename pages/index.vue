@@ -14,6 +14,7 @@
         <p>格式化和验证 JSON 数据</p>
       </NuxtLink>
     </div>
+    <Button>hello</Button>
   </div>
 </template>
 
