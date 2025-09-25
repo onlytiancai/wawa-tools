@@ -1,19 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-    <div class="w-full px-4 py-8">
-      <!-- 页面头部 -->
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-white dark:bg-gray-800 rounded-full shadow-lg mb-4">
-          <span class="text-2xl font-bold text-green-600 dark:text-green-400">{}</span>
-        </div>
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">JSON 格式化</h1>
-        <p class="text-lg text-gray-600 dark:text-gray-300">Wawa Tools - 智能 JSON 数据处理工具</p>
-        <div class="mt-4">
-          <NuxtLink to="/" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            <span>← 返回首页</span>
-          </NuxtLink>
-        </div>
-      </div>
+  <Sidebar>
+    <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+
 
       <!-- 编辑器区域 -->
       <div class="flex flex-col h-[calc(100vh-120px)] w-full">
@@ -78,7 +66,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </Sidebar>
 </template>
 
 <script setup>
