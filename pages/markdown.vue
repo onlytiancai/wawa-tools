@@ -1,32 +1,58 @@
 <template>
-  <div class="container">
-    <h1 class="title">Markdown 预览</h1>
-    <div class="back-link">
-      <NuxtLink to="/">返回首页</NuxtLink>
-    </div>
-    
-    <div class="editor-container">
-      <div class="editor-section">
-        <h2>编辑</h2>
-        <textarea 
-          v-model="markdownText" 
-          class="editor" 
-          placeholder="在这里输入 Markdown 文本..."
-          @input="updatePreview"
-        ></textarea>
+  <div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4 py-8">
+      <!-- 页面头部 -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white dark:bg-gray-800 rounded-full shadow-lg mb-4">
+          <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">📝</span>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Markdown 预览</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300">Wawa Tools - 实时 Markdown 编辑与预览</p>
+        <div class="mt-4">
+          <NuxtLink to="/" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+            <span>← 返回首页</span>
+          </NuxtLink>
+        </div>
       </div>
-      
-      <div class="preview-section">
-        <h2>预览</h2>
-        <div class="preview" v-html="htmlPreview"></div>
+
+      <!-- 编辑器区域 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <!-- 编辑区域 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+              <span class="text-purple-600 dark:text-purple-400">✏️</span>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">编辑</h2>
+          </div>
+          
+          <textarea 
+            v-model="markdownText" 
+            class="w-full h-96 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            placeholder="# 在这里输入 Markdown 文本..."
+            @input="updatePreview"
+          ></textarea>
+        </div>
+
+        <!-- 预览区域 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mr-3">
+              <span class="text-pink-600 dark:text-pink-400">👁️</span>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
+          </div>
+          
+          <div class="w-full h-96 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview">
+            <div v-html="htmlPreview"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
 const htmlPreview = ref('');
 
@@ -92,150 +118,93 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 保留必要的自定义样式 */
 .container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
 }
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
-  text-align: center;
-}
-
-.back-link {
-  margin-bottom: 2rem;
-}
-
-.back-link a {
-  color: #3498db;
-  text-decoration: none;
-}
-
-.back-link a:hover {
-  text-decoration: underline;
-}
-
-.editor-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  height: 70vh;
-}
-
-.editor-section, .preview-section {
-  display: flex;
-  flex-direction: column;
-}
-
-h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #3498db;
-}
-
-.editor {
-  flex-grow: 1;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 1rem;
-  resize: none;
-}
-
-.preview {
-  flex-grow: 1;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-}
-
-/* Markdown 样式 */
-.preview :deep(h1) {
+.markdown-preview :deep(h1) {
   font-size: 2em;
   margin-top: 0.67em;
   margin-bottom: 0.67em;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-.preview :deep(h2) {
+.markdown-preview :deep(h2) {
   font-size: 1.5em;
   margin-top: 0.83em;
   margin-bottom: 0.83em;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-.preview :deep(h3) {
+.markdown-preview :deep(h3) {
   font-size: 1.17em;
   margin-top: 1em;
   margin-bottom: 1em;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-.preview :deep(h4) {
-  margin-top: 1.33em;
-  margin-bottom: 1.33em;
-}
-
-.preview :deep(h5) {
-  font-size: 0.83em;
-  margin-top: 1.67em;
-  margin-bottom: 1.67em;
-}
-
-.preview :deep(h6) {
-  font-size: 0.67em;
-  margin-top: 2.33em;
-  margin-bottom: 2.33em;
-}
-
-.preview :deep(p) {
+.markdown-preview :deep(p) {
   margin-top: 1em;
   margin-bottom: 1em;
+  line-height: 1.6;
 }
 
-.preview :deep(blockquote) {
+.markdown-preview :deep(blockquote) {
   margin-left: 0;
   padding-left: 1em;
   border-left: 3px solid #ddd;
   color: #777;
+  font-style: italic;
 }
 
-.preview :deep(pre) {
+.markdown-preview :deep(pre) {
   background-color: #f5f5f5;
   padding: 1em;
   border-radius: 4px;
   overflow-x: auto;
+  margin: 1em 0;
 }
 
-.preview :deep(code) {
+.markdown-preview :deep(code) {
   font-family: monospace;
   background-color: #f5f5f5;
   padding: 0.2em 0.4em;
   border-radius: 3px;
+  font-size: 0.9em;
 }
 
-.preview :deep(pre code) {
+.markdown-preview :deep(pre code) {
   padding: 0;
   background-color: transparent;
 }
 
-.preview :deep(li) {
+.markdown-preview :deep(li) {
   margin: 0.5em 0;
 }
 
-.preview :deep(img) {
+.markdown-preview :deep(img) {
   max-width: 100%;
+  border-radius: 4px;
 }
 
-.preview :deep(a) {
+.markdown-preview :deep(a) {
   color: #3498db;
   text-decoration: none;
 }
 
-.preview :deep(a:hover) {
+.markdown-preview :deep(a:hover) {
   text-decoration: underline;
+}
+
+.markdown-preview :deep(strong) {
+  font-weight: bold;
+}
+
+.markdown-preview :deep(em) {
+  font-style: italic;
 }
 </style>

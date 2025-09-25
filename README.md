@@ -81,3 +81,10 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+# 常用命令
+
+    npm install --save-dev typescript
+    npm install tailwindcss @tailwindcss/vite --save-dev
+    npx shadcn-vue@latest init
+    npx shadcn-vue@latest add button  
