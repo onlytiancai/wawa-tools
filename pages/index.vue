@@ -14,7 +14,10 @@
         <p>格式化和验证 JSON 数据</p>
       </NuxtLink>
     </div>
-    <Button>hello</Button>
+    <Button variant="default" size="lg">hello</Button>
+<Button variant="destructive" size="sm">delete</Button>
+<Button variant="outline" size="icon">icon</Button>
+
   </div>
 </template>
 
