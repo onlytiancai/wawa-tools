@@ -85,7 +85,6 @@
 </template>
 
 <script setup>
-import CodeEditor from '~/components/ui/code-editor.vue'
 import { JsonViewer } from 'vue3-json-viewer'
 import 'vue3-json-viewer/dist/vue3-json-viewer.css'
 
