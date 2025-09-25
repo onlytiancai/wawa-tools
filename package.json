@@ -23,6 +23,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "shadcn-nuxt": "^2.2.0",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
   }
 }
