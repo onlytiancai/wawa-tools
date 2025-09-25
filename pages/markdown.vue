@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800">
-    <div class="container mx-auto px-4 py-8">
+    <div class="w-full px-4 py-8">
       <!-- 页面头部 -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-white dark:bg-gray-800 rounded-full shadow-lg mb-4">
@@ -16,8 +16,8 @@
       </div>
 
       <!-- 编辑器区域 -->
-      <div class="flex flex-col h-[calc(100vh-160px)] w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 px-2">
+      <div class="flex flex-col h-[calc(100vh-120px)] w-full">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-1 min-h-0 px-6">
           <!-- 编辑区域 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col min-h-0">
             <div class="flex items-center mb-4">
@@ -109,9 +109,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 保留必要的自定义样式 */
-.container {
-  max-width: 1200px;
+/* 宽屏优化样式 */
+.markdown-preview {
+  max-width: none;
 }
 
 /* GitHub风格的Markdown样式 */
