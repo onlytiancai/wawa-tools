@@ -75,6 +75,7 @@
         <p class="text-gray-500 dark:text-gray-400 text-sm">
           基于 Nuxt 3 + Tailwind CSS + shadcn-vue 构建
         </p>
+        <Footer />
       </div>
     </div>
   </div>

@@ -38,6 +38,8 @@
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   </Sidebar>
 </template>
