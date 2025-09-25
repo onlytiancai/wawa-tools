@@ -20,4 +20,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [ tailwindcss() ],
   },
+  modules: [
+    'shadcn-nuxt',
+    // …可能还要有 Tailwind 模块或插件
+  ],
+  shadcn: {
+    prefix: '',
+    componentDir: './components/ui', // 放组件的目录（可自定义）
+  },
 })

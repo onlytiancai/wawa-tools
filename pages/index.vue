@@ -2,7 +2,11 @@
   <div class="container">
     <h1 class="title">Wawa Tools</h1>
     <p class="description">实用的在线工具集合</p>
-    
+
+    <Button variant="default" size="lg">hello</Button>
+    <Button variant="destructive" size="sm">delete</Button>
+    <Button variant="outline" size="icon">icon</Button>
+
     <div class="tools-grid">
       <NuxtLink to="/markdown" class="tool-card">
         <h2>Markdown 预览</h2>
