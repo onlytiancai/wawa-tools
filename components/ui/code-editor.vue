@@ -8,6 +8,7 @@ import { EditorState } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers } from '@codemirror/view'
 import { json } from '@codemirror/lang-json'
 import { defaultKeymap } from '@codemirror/commands'
+import { oneDark } from '@codemirror/theme-one-dark'
 
 const props = defineProps({
   modelValue: {
@@ -35,6 +36,7 @@ const createExtensions = () => {
     lineNumbers(),
     json(),
     EditorView.lineWrapping,
+    oneDark,
     EditorView.theme({
       '&': {
         fontSize: '14px',
