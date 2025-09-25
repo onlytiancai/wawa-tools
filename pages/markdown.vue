@@ -56,18 +56,51 @@
 
 <script setup>
 import { marked } from 'marked';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
-const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
+const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
 const htmlPreview = ref('');
 
 // 配置marked选项
 marked.setOptions({
-  breaks: true, // 启用换行符
-  gfm: true,    // 启用GitHub风格的Markdown
+  breaks: true,
+  gfm: true,
+  highlight: function(code, lang) {
+    return code;
+  }
 });
 
+// 处理数学公式的函数
+function processMathFormulas(html) {
+  // 处理块级数学公式 $$...$$，需要处理可能包含的<br>标签
+  html = html.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+    try {
+      // 清理数学公式中的HTML标签和多余空格
+      const cleanMath = math.replace(/<br\s*\/?>/gi, '\n').replace(/&nbsp;/g, ' ').trim();
+      return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+    } catch (e) {
+      return match;
+    }
+  });
+  
+  // 处理行内数学公式 $...$
+  html = html.replace(/\$([^$]+)\$/g, (match, math) => {
+    try {
+      const cleanMath = math.replace(/<br\s*\/?>/gi, '').replace(/&nbsp;/g, ' ').trim();
+      return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+    } catch (e) {
+      return match;
+    }
+  });
+  
+  return html;
+}
+
 function updatePreview() {
-  htmlPreview.value = marked.parse(markdownText.value);
+  let html = marked.parse(markdownText.value);
+  html = processMathFormulas(html);
+  htmlPreview.value = html;
 }
 
 onMounted(() => {
@@ -81,76 +114,136 @@ onMounted(() => {
   max-width: 1200px;
 }
 
+/* GitHub风格的Markdown样式 */
+.markdown-preview :deep(*) {
+  box-sizing: border-box;
+}
+
 .markdown-preview :deep(h1) {
   font-size: 2em;
-  margin-top: 0.67em;
-  margin-bottom: 0.67em;
-  font-weight: bold;
-  color: #2c3e50;
+  margin: 0.67em 0;
+  font-weight: 600;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #eaecef;
+  color: #24292e;
 }
 
 .markdown-preview :deep(h2) {
   font-size: 1.5em;
-  margin-top: 0.83em;
-  margin-bottom: 0.83em;
-  font-weight: bold;
-  color: #2c3e50;
+  margin: 1em 0 0.5em;
+  font-weight: 600;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #eaecef;
+  color: #24292e;
 }
 
 .markdown-preview :deep(h3) {
-  font-size: 1.17em;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  font-weight: bold;
-  color: #2c3e50;
+  font-size: 1.25em;
+  margin: 1em 0 0.5em;
+  font-weight: 600;
+  color: #24292e;
+}
+
+.markdown-preview :deep(h4) {
+  font-size: 1em;
+  margin: 1em 0 0.5em;
+  font-weight: 600;
+  color: #24292e;
+}
+
+.markdown-preview :deep(h5) {
+  font-size: 0.875em;
+  margin: 1em 0 0.5em;
+  font-weight: 600;
+  color: #24292e;
+}
+
+.markdown-preview :deep(h6) {
+  font-size: 0.85em;
+  margin: 1em 0 0.5em;
+  font-weight: 600;
+  color: #586069;
 }
 
 .markdown-preview :deep(p) {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin: 1em 0;
   line-height: 1.6;
+  color: #24292e;
 }
 
 .markdown-preview :deep(blockquote) {
-  margin-left: 0;
-  padding-left: 1em;
-  border-left: 3px solid #ddd;
-  color: #777;
-  font-style: italic;
+  margin: 1em 0;
+  padding: 0 1em;
+  border-left: 4px solid #dfe2e5;
+  color: #6a737d;
 }
 
 .markdown-preview :deep(pre) {
-  background-color: #f5f5f5;
-  padding: 1em;
-  border-radius: 4px;
+  background-color: #f6f8fa;
+  padding: 16px;
+  border-radius: 6px;
   overflow-x: auto;
   margin: 1em 0;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .markdown-preview :deep(code) {
-  font-family: monospace;
-  background-color: #f5f5f5;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+  background-color: rgba(175, 184, 193, 0.2);
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  font-size: 0.9em;
+  font-size: 85%;
 }
 
 .markdown-preview :deep(pre code) {
   padding: 0;
   background-color: transparent;
+  font-size: 100%;
+}
+
+.markdown-preview :deep(ul) {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.markdown-preview :deep(ol) {
+  margin: 1em 0;
+  padding-left: 2em;
 }
 
 .markdown-preview :deep(li) {
-  margin: 0.5em 0;
+  margin: 0.25em 0;
+  line-height: 1.6;
+}
+
+.markdown-preview :deep(table) {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+}
+
+.markdown-preview :deep(th) {
+  background-color: #f6f8fa;
+  border: 1px solid #dfe2e5;
+  padding: 6px 13px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.markdown-preview :deep(td) {
+  border: 1px solid #dfe2e5;
+  padding: 6px 13px;
 }
 
 .markdown-preview :deep(img) {
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .markdown-preview :deep(a) {
-  color: #3498db;
+  color: #0366d6;
   text-decoration: none;
 }
 
@@ -159,10 +252,74 @@ onMounted(() => {
 }
 
 .markdown-preview :deep(strong) {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .markdown-preview :deep(em) {
   font-style: italic;
+}
+
+.markdown-preview :deep(hr) {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+/* KaTeX数学公式样式 */
+.markdown-preview :deep(.katex) {
+  font-size: 1.1em;
+}
+
+.markdown-preview :deep(.katex-display) {
+  margin: 1em 0;
+  text-align: center;
+}
+
+.markdown-preview :deep(.katex-display > .katex) {
+  text-align: center;
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .markdown-preview :deep(h1),
+  .markdown-preview :deep(h2),
+  .markdown-preview :deep(h3),
+  .markdown-preview :deep(h4),
+  .markdown-preview :deep(h5),
+  .markdown-preview :deep(p) {
+    color: #e6edf3;
+  }
+  
+  .markdown-preview :deep(h6) {
+    color: #7d8590;
+  }
+  
+  .markdown-preview :deep(blockquote) {
+    border-left-color: #3d444d;
+    color: #7d8590;
+  }
+  
+  .markdown-preview :deep(pre) {
+    background-color: #161b22;
+  }
+  
+  .markdown-preview :deep(code) {
+    background-color: rgba(110, 118, 129, 0.4);
+  }
+  
+  .markdown-preview :deep(table th) {
+    background-color: #161b22;
+    border-color: #3d444d;
+  }
+  
+  .markdown-preview :deep(table td) {
+    border-color: #3d444d;
+  }
+  
+  .markdown-preview :deep(hr) {
+    background-color: #21262d;
+  }
 }
 </style>
