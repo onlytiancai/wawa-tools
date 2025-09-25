@@ -5,8 +5,17 @@
       class="bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out"
       :class="isCollapsed ? 'w-16' : 'w-64'"
     >
-      <!-- 折叠按钮 -->
-      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <!-- 网站标题和logo -->
+      <div class="p-3 border-b border-gray-200 dark:border-gray-700">
+        <NuxtLink 
+          to="/" 
+          class="flex items-center justify-center mb-3 transition-colors hover:opacity-80"
+        >
+          <span class="text-xl">🐸</span>
+          <span v-if="!isCollapsed" class="ml-2 text-base font-semibold text-gray-800 dark:text-gray-200">蛙蛙工具</span>
+        </NuxtLink>
+        
+        <!-- 折叠按钮 -->
         <Button 
           @click="toggleSidebar" 
           variant="ghost" 
@@ -19,23 +28,11 @@
       </div>
 
       <!-- 导航菜单 -->
-      <nav class="p-2">
-        <NuxtLink 
-          to="/" 
-          class="flex items-center p-3 rounded-lg mb-2 transition-colors"
-          :class="[
-            $route.path === '/' 
-              ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400' 
-              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-          ]"
-        >
-          <span class="text-lg">🏠</span>
-          <span v-if="!isCollapsed" class="ml-3 font-medium">首页</span>
-        </NuxtLink>
+      <nav class="p-1">
 
         <NuxtLink 
           to="/markdown" 
-          class="flex items-center p-3 rounded-lg mb-2 transition-colors"
+          class="flex items-center p-2 rounded-lg mb-1 transition-colors"
           :class="[
             $route.path === '/markdown' 
               ? 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400' 
@@ -48,7 +45,7 @@
 
         <NuxtLink 
           to="/json" 
-          class="flex items-center p-3 rounded-lg mb-2 transition-colors"
+          class="flex items-center p-2 rounded-lg mb-1 transition-colors"
           :class="[
             $route.path === '/json' 
               ? 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400' 
