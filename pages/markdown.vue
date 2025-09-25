@@ -16,35 +16,37 @@
       </div>
 
       <!-- 编辑器区域 -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-        <!-- 编辑区域 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div class="flex items-center mb-4">
-            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
-              <span class="text-purple-600 dark:text-purple-400">✏️</span>
+      <div class="flex flex-col h-[calc(100vh-160px)] w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 px-2">
+          <!-- 编辑区域 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col min-h-0">
+            <div class="flex items-center mb-4">
+              <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+                <span class="text-purple-600 dark:text-purple-400">✏️</span>
+              </div>
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">编辑</h2>
             </div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">编辑</h2>
+            
+            <textarea 
+              v-model="markdownText" 
+              class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-vertical focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-0"
+              placeholder="# 在这里输入 Markdown 文本..."
+              @input="updatePreview"
+            ></textarea>
           </div>
-          
-          <textarea 
-            v-model="markdownText" 
-            class="w-full h-96 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            placeholder="# 在这里输入 Markdown 文本..."
-            @input="updatePreview"
-          ></textarea>
-        </div>
 
-        <!-- 预览区域 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div class="flex items-center mb-4">
-            <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mr-3">
-              <span class="text-pink-600 dark:text-pink-400">👁️</span>
+          <!-- 预览区域 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col min-h-0">
+            <div class="flex items-center mb-4">
+              <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mr-3">
+                <span class="text-pink-600 dark:text-pink-400">👁️</span>
+              </div>
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
             </div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
-          </div>
-          
-          <div class="w-full h-96 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview">
-            <div v-html="htmlPreview"></div>
+            
+            <div class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview min-h-0">
+              <div v-html="htmlPreview"></div>
+            </div>
           </div>
         </div>
       </div>
