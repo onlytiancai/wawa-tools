@@ -33,7 +33,7 @@
             </div>
             
             <div class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview min-h-0">
-              <div v-html="htmlPreview"></div>
+              <div class="markdown-body" v-html="htmlPreview"></div>
             </div>
           </div>
         </div>
@@ -51,6 +51,7 @@ import hljs from 'highlight.js';
 import { nextTick } from 'vue';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
+import 'github-markdown-css/github-markdown.css';
 
 // 初始化 highlight.js
 hljs.highlightAll();
@@ -130,288 +131,19 @@ onMounted(() => {
   max-width: none;
 }
 
-/* GitHub风格的Markdown样式 */
-.markdown-preview :deep(*) {
-  box-sizing: border-box;
-}
-
-.markdown-preview :deep(h1) {
-  font-size: 2em;
-  margin: 0.67em 0;
-  font-weight: 600;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid #eaecef;
-  color: #24292e;
-}
-
-.markdown-preview :deep(h2) {
-  font-size: 1.5em;
-  margin: 1em 0 0.5em;
-  font-weight: 600;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid #eaecef;
-  color: #24292e;
-}
-
-.markdown-preview :deep(h3) {
-  font-size: 1.25em;
-  margin: 1em 0 0.5em;
-  font-weight: 600;
-  color: #24292e;
-}
-
-.markdown-preview :deep(h4) {
-  font-size: 1em;
-  margin: 1em 0 0.5em;
-  font-weight: 600;
-  color: #24292e;
-}
-
-.markdown-preview :deep(h5) {
-  font-size: 0.875em;
-  margin: 1em 0 0.5em;
-  font-weight: 600;
-  color: #24292e;
-}
-
-.markdown-preview :deep(h6) {
-  font-size: 0.85em;
-  margin: 1em 0 0.5em;
-  font-weight: 600;
-  color: #586069;
-}
-
-.markdown-preview :deep(p) {
-  margin: 1em 0;
-  line-height: 1.6;
-  color: #24292e;
-}
-
-.markdown-preview :deep(blockquote) {
-  margin: 1em 0;
-  padding: 0 1em;
-  border-left: 4px solid #dfe2e5;
-  color: #6a737d;
-}
-
-.markdown-preview :deep(pre) {
-  background-color: #f6f8fa;
-  padding: 16px;
-  border-radius: 6px;
-  overflow-x: auto;
-  margin: 1em 0;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.markdown-preview :deep(code) {
-  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
-  background-color: rgba(175, 184, 193, 0.2);
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
-  font-size: 85%;
-}
-
-.markdown-preview :deep(pre code) {
-  padding: 0;
+/* 确保 markdown-body 样式正确应用 */
+.markdown-preview :deep(.markdown-body) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
   background-color: transparent;
-  font-size: 100%;
-}
-
-.markdown-preview :deep(ul) {
-  margin: 1em 0;
-  padding-left: 2em;
-}
-
-.markdown-preview :deep(ol) {
-  margin: 1em 0;
-  padding-left: 2em;
-}
-
-.markdown-preview :deep(li) {
-  margin: 0.25em 0;
-  line-height: 1.6;
-}
-
-.markdown-preview :deep(table) {
-  border-spacing: 0;
-  border-collapse: collapse;
-  margin: 1em 0;
-  width: 100%;
-}
-
-.markdown-preview :deep(th) {
-  background-color: #f6f8fa;
-  border: 1px solid #dfe2e5;
-  padding: 6px 13px;
-  font-weight: 600;
-  text-align: left;
-}
-
-.markdown-preview :deep(td) {
-  border: 1px solid #dfe2e5;
-  padding: 6px 13px;
-}
-
-.markdown-preview :deep(img) {
-  max-width: 100%;
-  border-radius: 6px;
-}
-
-.markdown-preview :deep(a) {
-  color: #0366d6;
-  text-decoration: none;
-}
-
-.markdown-preview :deep(a:hover) {
-  text-decoration: underline;
-}
-
-.markdown-preview :deep(strong) {
-  font-weight: 600;
-}
-
-.markdown-preview :deep(em) {
-  font-style: italic;
-}
-
-.markdown-preview :deep(hr) {
-  height: 0.25em;
-  padding: 0;
-  margin: 24px 0;
-  background-color: #e1e4e8;
-  border: 0;
-}
-
-/* KaTeX数学公式样式 */
-.markdown-preview :deep(.katex) {
-  font-size: 1.1em;
-}
-
-.markdown-preview :deep(.katex-display) {
-  margin: 1em 0;
-  text-align: center;
-}
-
-.markdown-preview :deep(.katex-display > .katex) {
-  text-align: center;
-}
-
-/* 代码块样式 */
-.markdown-preview :deep(.code-block) {
-  margin: 1em 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.markdown-preview :deep(.code-header) {
-  background: #24292e;
-  color: #f6f8fa;
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.markdown-preview :deep(.language-label) {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
-
-/* 确保 highlight.js 样式正确应用 */
-.markdown-preview :deep(.hljs) {
-  display: block !important;
-  background: #f6f8fa !important;
-  color: #24292e !important;
-}
-
-.markdown-preview :deep(.code-block .hljs) {
-  background: #f6f8fa !important;
-}
-
-/* 重置代码块内 pre 和 code 的样式 */
-.markdown-preview :deep(.code-container pre.hljs) {
-  background: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.markdown-preview :deep(.code-container pre.hljs code) {
-  background: transparent !important;
-  padding: 0 !important;
 }
 
 /* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
-  .markdown-preview :deep(.code-block) {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* 暗色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .markdown-preview :deep(h1),
-  .markdown-preview :deep(h2),
-  .markdown-preview :deep(h3),
-  .markdown-preview :deep(h4),
-  .markdown-preview :deep(h5),
-  .markdown-preview :deep(p) {
-    color: #e6edf3;
-  }
-  
-  .markdown-preview :deep(h6) {
-    color: #7d8590;
-  }
-  
-  .markdown-preview :deep(blockquote) {
-    border-left-color: #3d444d;
-    color: #7d8590;
-  }
-  
-  .markdown-preview :deep(pre) {
-    background-color: #161b22;
-  }
-  
-  .markdown-preview :deep(code) {
-    background-color: rgba(110, 118, 129, 0.4);
-  }
-  
-  .markdown-preview :deep(table th) {
-    background-color: #161b22;
-    border-color: #3d444d;
-  }
-  
-  .markdown-preview :deep(table td) {
-    border-color: #3d444d;
-  }
-  
-  .markdown-preview :deep(hr) {
-    background-color: #21262d;
-  }
-  
-  /* 暗色模式下的代码块样式 */
-  .markdown-preview :deep(.code-block .hljs) {
-    background: #0d1117 !important;
-  }
-  
-  .markdown-preview :deep(.code-header) {
-    background: #161b22;
-    color: #f0f6fc;
-  }
-  
-  .markdown-preview :deep(.line-numbers) {
-    background: #21262d;
-    color: #8b949e;
-    border-right-color: #30363d;
-  }
-  
-  .markdown-preview :deep(.code-container) {
-    background: #0d1117;
+  .markdown-preview :deep(.markdown-body) {
+    color-scheme: dark;
   }
 }
 </style>
