@@ -47,7 +47,13 @@
 <script setup>
 import { marked } from 'marked';
 import katex from 'katex';
+import hljs from 'highlight.js';
+import { nextTick } from 'vue';
 import 'katex/dist/katex.min.css';
+import 'highlight.js/styles/github.css';
+
+// 初始化 highlight.js
+hljs.highlightAll();
 
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
 const htmlPreview = ref('');
@@ -57,7 +63,20 @@ marked.setOptions({
   breaks: true,
   gfm: true,
   highlight: function(code, lang) {
-    return code;
+    try {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      const result = hljs.highlight(code, { language });
+      
+      return `<div class="code-block">
+        <div class="code-header">
+          <span class="language-label">${language}</span>
+        </div>
+        <pre><code class="hljs language-${language}">${result.value}</code></pre>
+      </div>`;
+    } catch (e) {
+      // 如果高亮失败，返回原始代码
+      return `<pre><code>${code}</code></pre>`;
+    }
   }
 });
 
@@ -91,6 +110,13 @@ function updatePreview() {
   let html = marked.parse(markdownText.value);
   html = processMathFormulas(html);
   htmlPreview.value = html;
+  
+  // 在下一个 tick 中手动调用 highlight.js
+  nextTick(() => {
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightElement(block);
+    });
+  });
 }
 
 onMounted(() => {
@@ -271,6 +297,62 @@ onMounted(() => {
   text-align: center;
 }
 
+/* 代码块样式 */
+.markdown-preview :deep(.code-block) {
+  margin: 1em 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.markdown-preview :deep(.code-header) {
+  background: #24292e;
+  color: #f6f8fa;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.markdown-preview :deep(.language-label) {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+
+/* 确保 highlight.js 样式正确应用 */
+.markdown-preview :deep(.hljs) {
+  display: block !important;
+  background: #f6f8fa !important;
+  color: #24292e !important;
+}
+
+.markdown-preview :deep(.code-block .hljs) {
+  background: #f6f8fa !important;
+}
+
+/* 重置代码块内 pre 和 code 的样式 */
+.markdown-preview :deep(.code-container pre.hljs) {
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.markdown-preview :deep(.code-container pre.hljs code) {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .markdown-preview :deep(.code-block) {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
 /* 暗色模式支持 */
 @media (prefers-color-scheme: dark) {
   .markdown-preview :deep(h1),
@@ -310,6 +392,26 @@ onMounted(() => {
   
   .markdown-preview :deep(hr) {
     background-color: #21262d;
+  }
+  
+  /* 暗色模式下的代码块样式 */
+  .markdown-preview :deep(.code-block .hljs) {
+    background: #0d1117 !important;
+  }
+  
+  .markdown-preview :deep(.code-header) {
+    background: #161b22;
+    color: #f0f6fc;
+  }
+  
+  .markdown-preview :deep(.line-numbers) {
+    background: #21262d;
+    color: #8b949e;
+    border-right-color: #30363d;
+  }
+  
+  .markdown-preview :deep(.code-container) {
+    background: #0d1117;
   }
 }
 </style>

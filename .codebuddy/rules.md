@@ -37,6 +37,9 @@ server/          # 服务端API
 <script setup>
 // Composition API - 使用 Nuxt 自动导入功能
 // ref, onMounted 等 Vue API 无需显式导入
+// useState, useFetch 等 Nuxt 组合式函数无需显式导入
+// 仅在需要自定义导入时才使用 import 语句
+// components 无需显式导入
 </script>
 
 <style scoped>
