@@ -64,6 +64,14 @@ const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools**
 const htmlPreview = computed(() => {
     let html = marked.parse(markdownText.value);
     html = processMathFormulas(html);
+    // 只在客户端执行 DOM 操作
+    if (import.meta.client) {
+      nextTick(() => {
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      });
+    }
     return html
 })
 
