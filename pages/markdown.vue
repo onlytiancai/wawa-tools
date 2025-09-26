@@ -61,7 +61,11 @@ const extensions = [
 ]
 
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
-const htmlPreview = ref('<p>Markdown 预览工具 - 请在浏览器中查看实时预览</p>');
+const htmlPreview = computed(() => {
+    let html = marked.parse(markdownText.value);
+    html = processMathFormulas(html);
+    return html
+})
 
 // 配置marked选项
 marked.setOptions({
@@ -109,28 +113,8 @@ function processMathFormulas(html) {
   return html;
 }
 
-function updatePreview() {
-  try {
-    let html = marked.parse(markdownText.value);
-    html = processMathFormulas(html);
-    htmlPreview.value = html;
-    
-    // 只在客户端执行 DOM 操作
-    if (process.client) {
-      nextTick(() => {
-        document.querySelectorAll('pre code').forEach((block) => {
-          hljs.highlightElement(block);
-        });
-      });
-    }
-  } catch (error) {
-    console.error('Error updating preview:', error);
-    htmlPreview.value = '<p>预览生成失败</p>';
-  }
-}
-
 onMounted(() => {
-  updatePreview();
+  
 });
 </script>
 
