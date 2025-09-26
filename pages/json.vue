@@ -252,6 +252,12 @@ function clearJson() {
   line-height: 1.5;
 }
 
+/* 覆盖 JsonViewer 默认的最大高度限制 */
+:deep(.jv-container .jv-code.boxed) {
+  max-height: none !important;
+  height: 100% !important;
+}
+
 /* 暗色模式适配 */
 :deep(.cm-editor.dark) {
   background-color: #1f2937;
