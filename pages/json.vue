@@ -123,6 +123,10 @@ watch(isDark, (dark) => {
   })
 })
 
+const handleDataUpdate = (newData) => {
+  console.log("Data updated:", newData);
+};
+
 // 监听主题变化
 onMounted(() => {
   // 初始检查主题
