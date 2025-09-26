@@ -142,6 +142,20 @@ onMounted(() => {
   background-color: transparent;
 }
 
+/* 恢复列表标记符号 */
+.markdown-preview :deep(.markdown-body ul) {
+  list-style-type: disc;
+
+}
+
+.markdown-preview :deep(.markdown-body ol) {
+  list-style-type: decimal;
+}
+
+.markdown-preview :deep(.markdown-body li) {
+  margin: 0.25em 0;
+}
+
 /* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
   .markdown-preview :deep(.markdown-body) {
