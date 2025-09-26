@@ -1,6 +1,7 @@
 <template>
   <Sidebar>
-    <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 overflow-auto">
+    <div
+      class="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 overflow-auto">
 
       <!-- 编辑器区域 -->
       <div class="w-full flex-1 min-h-0">
@@ -15,24 +16,23 @@
             </div>
 
             <div class="flex-1 min-h-0">
-              <Codemirror 
-                @ready="onReady"
-                v-model="jsonInput" 
-                :extensions="extensions"
-                class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <Codemirror @ready="onReady" v-model="jsonInput" :extensions="extensions"
+                class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent" />
             </div>
-            
+
             <div class="flex gap-3 mt-4">
-              <Button @click="formatJson" variant="outline" class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+              <Button @click="formatJson" variant="outline"
+                class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span class="mr-2">✨</span>
                 格式化
               </Button>
-              <Button @click="minifyJson" variant="outline" class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+              <Button @click="minifyJson" variant="outline"
+                class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span class="mr-2">🔍</span>
                 压缩
               </Button>
-              <Button @click="clearJson" variant="outline" class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+              <Button @click="clearJson" variant="outline"
+                class="flex-1 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span class="mr-2">🗑️</span>
                 清空
               </Button>
@@ -49,29 +49,25 @@
             </div>
 
             <div class="flex-1 min-h-0 overflow-y-auto">
-              <div 
-                v-if="hasError"
-                class="w-full p-4 border border-red-300 dark:border-red-700 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 font-mono text-sm"
-              >
+              <div v-if="hasError"
+                class="w-full p-4 border border-red-300 dark:border-red-700 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 font-mono text-sm">
                 <pre><code>{{ jsonOutput }}</code></pre>
               </div>
-              
-              <JsonViewer 
-                v-else-if="parsedJson"
-                :value="parsedJson"
-                class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg overflow-auto"
-                :expand-depth="3"
-                :copyable="true"
-                :boxed="true"
-                :theme="isDark ? 'dark' : 'light'"
-              />
-              
-              <div v-else class="w-full h-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-mono text-sm flex items-center justify-center">
+
+
+  
+              <JsonViewer v-else-if="parsedJson" v-model:data="parsedJson" :editable="true" :theme="isDark ? 'dark' : 'light'" default-mode="tree"
+                @update:data="handleDataUpdate" />
+
+
+              <div v-else
+                class="w-full h-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-mono text-sm flex items-center justify-center">
                 等待输入 JSON 数据...
               </div>
             </div>
-            
-            <div v-if="!hasError && parsedJson" class="mt-4 flex items-center text-sm text-green-600 dark:text-green-400">
+
+            <div v-if="!hasError && parsedJson"
+              class="mt-4 flex items-center text-sm text-green-600 dark:text-green-400">
               <span class="mr-2">✅</span>
               JSON 格式正确
             </div>
@@ -89,15 +85,14 @@
 </template>
 
 <script setup>
-import { JsonViewer } from 'vue3-json-viewer'
-import 'vue3-json-viewer/dist/vue3-json-viewer.css'
+import "@ctechhindi/vue3-json-viewer/dist/index.css";
 import { Codemirror } from 'vue-codemirror'
 import { json } from '@codemirror/lang-json'
 import { EditorView } from '@codemirror/view'
 import { darkLineNumberTheme, lightLineNumberTheme} from '../lib/utils.ts'
 import { Compartment } from '@codemirror/state'
-
-
+import JsonViewer from "@ctechhindi/vue3-json-viewer";
+import { oneDark } from '@codemirror/theme-one-dark'
 
 const jsonInput = ref('{\n  "name": "Wawa Tools",\n  "version": "1.0.0",\n  "description": "实用的在线工具集合",\n  "features": ["Markdown预览", "JSON格式化"],\n  "isAwesome": true\n}');
 
@@ -117,8 +112,14 @@ function onReady(payload) {
 
 watch(isDark, (dark) => {
   if (!view) return
+  
+  // 根据dark值设置主题
+  const themeExtension = 
   view.dispatch({
-    effects: themeCompartment.reconfigure(dark ? darkLineNumberTheme : lightLineNumberTheme)
+    effects: themeCompartment.reconfigure([
+      dark ? darkLineNumberTheme : lightLineNumberTheme,
+      dark ? oneDark: EditorView.theme({}, { dark: false }) 
+    ])
   })
 })
 
