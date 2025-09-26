@@ -16,6 +16,7 @@
 
             <div class="flex-1 min-h-0">
               <Codemirror 
+                @ready="onReady"
                 v-model="jsonInput" 
                 :extensions="extensions"
                 class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -93,16 +94,33 @@ import 'vue3-json-viewer/dist/vue3-json-viewer.css'
 import { Codemirror } from 'vue-codemirror'
 import { json } from '@codemirror/lang-json'
 import { EditorView } from '@codemirror/view'
+import { darkLineNumberTheme, lightLineNumberTheme} from '../lib/utils'
+import { Compartment } from '@codemirror/state'
 
-const extensions = [
-  json(),
-  EditorView.lineWrapping
-]
+
 
 const jsonInput = ref('{\n  "name": "Wawa Tools",\n  "version": "1.0.0",\n  "description": "实用的在线工具集合",\n  "features": ["Markdown预览", "JSON格式化"],\n  "isAwesome": true\n}');
 
-// 暗色主题状态
+
 const isDark = ref(false);
+const themeCompartment = new Compartment()
+const extensions = [
+  json(),
+  EditorView.lineWrapping,
+  themeCompartment.of(lightLineNumberTheme)
+]
+
+let view = null
+function onReady(payload) {
+  view = payload.view
+}
+
+watch(isDark, (dark) => {
+  if (!view) return
+  view.dispatch({
+    effects: themeCompartment.reconfigure(dark ? darkLineNumberTheme : lightLineNumberTheme)
+  })
+})
 
 // 监听主题变化
 onMounted(() => {
