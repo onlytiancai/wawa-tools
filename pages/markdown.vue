@@ -1,7 +1,7 @@
 <template>
   <Sidebar>
     <div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800">
- 
+
 
       <!-- 编辑器区域 -->
       <div class="flex flex-col h-[calc(100vh-120px)] w-full">
@@ -14,13 +14,12 @@
               </div>
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">编辑</h2>
             </div>
-            
-            <textarea 
-              v-model="markdownText" 
-              class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-vertical focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-0"
-              placeholder="# 在这里输入 Markdown 文本..."
-              @input="updatePreview"
-            ></textarea>
+
+            <Codemirror v-model="markdownText" :extensions="extensions" 
+            class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-vertical focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-0"
+            />
+
+
           </div>
 
           <!-- 预览区域 -->
@@ -31,8 +30,9 @@
               </div>
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
             </div>
-            
-            <div class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview min-h-0">
+
+            <div
+              class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview min-h-0">
               <div class="markdown-body" v-html="htmlPreview"></div>
             </div>
           </div>
@@ -52,6 +52,13 @@ import { nextTick } from 'vue';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
 import 'github-markdown-css/github-markdown.css';
+import { Codemirror } from 'vue-codemirror'
+import { markdown } from '@codemirror/lang-markdown'
+import { languages } from '@codemirror/language-data'
+
+const extensions = [
+ markdown({ codeLanguages: languages })
+]
 
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
 const htmlPreview = ref('<p>Markdown 预览工具 - 请在浏览器中查看实时预览</p>');
