@@ -27,8 +27,8 @@
           <!-- 预览区域 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col h-full">
             <div class="flex items-center mb-4 flex-shrink-0">
-              <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mr-3">
-                <span class="text-pink-600 dark:text-pink-400">👁️</span>
+              <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3">
+                <span class="text-blue-600 dark:text-blue-400">📄</span>
               </div>
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
             </div>
@@ -56,13 +56,13 @@ import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
 import 'github-markdown-css/github-markdown.css';
-import 'github-markdown-css/github-markdown-dark.css';
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { EditorView } from '@codemirror/view'
 import { darkLineNumberTheme, lightLineNumberTheme } from '../lib/utils.ts'
 import { Compartment } from '@codemirror/state'
+import { oneDark } from '@codemirror/theme-one-dark'
 
 const isDark = ref(false);
 const themeCompartment = new Compartment()
@@ -79,8 +79,14 @@ function onReady(payload) {
 
 watch(isDark, (dark) => {
   if (!view) return
+  
+  // 根据dark值设置主题
+  const themeExtension = 
   view.dispatch({
-    effects: themeCompartment.reconfigure(dark ? darkLineNumberTheme : lightLineNumberTheme)
+    effects: themeCompartment.reconfigure([
+      dark ? darkLineNumberTheme : lightLineNumberTheme,
+      dark ? oneDark: EditorView.theme({}, { dark: false }) 
+    ])
   })
 })
 
@@ -130,20 +136,11 @@ const htmlPreview = computed(() => {
 marked.setOptions({
   breaks: true,
   gfm: true,
-  highlight: function(code, lang) {
-    try {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      const result = hljs.highlight(code, { language });
-      
-      return `<div class="code-block">
-        <div class="code-header">
-          <span class="language-label">${language}</span>
-        </div>
-        <pre><code class="hljs language-${language}">${result.value}</code></pre>
-      </div>`;
-    } catch (e) {
-      return `<pre><code>${code}</code></pre>`;
+  highlight(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value
     }
+    return hljs.highlightAuto(code).value
   }
 });
 
@@ -189,14 +186,14 @@ onMounted(() => {
   border-radius: 6px;
 }
 
-/* 亮色主题使用默认样式 */
+/* 亮色主题样式 */
 .markdown-preview:not(.dark) :deep(.markdown-body) {
   background-color: #ffffff;
+  color: #24292e;
 }
 
-/* 暗色主题使用 github-markdown-dark.css 提供的样式 */
+/* 暗色主题样式 */
 .markdown-preview.dark :deep(.markdown-body) {
-  /* 使用 github-markdown-dark.css 提供的暗色主题 */
   background-color: #0d1117;
   color: #f0f6fc;
 }
@@ -236,7 +233,18 @@ onMounted(() => {
   min-height: 300px;
 }
 
+/* 恢复列表标记符号 */
+.markdown-preview :deep(.markdown-body ul) {
+  list-style-type: disc;
+}
 
+.markdown-preview :deep(.markdown-body ol) {
+  list-style-type: decimal;
+}
+
+.markdown-preview :deep(.markdown-body li) {
+  margin: 0.25em 0;
+}
 
 /* 代码高亮主题切换 */
 .markdown-preview:not(.dark) :deep(.hljs) {
@@ -245,5 +253,49 @@ onMounted(() => {
 
 .markdown-preview.dark :deep(.hljs) {
   background: #0d1117 !important;
+}
+
+/* 代码块样式优化 */
+.markdown-preview:not(.dark) :deep(pre) {
+  background-color: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+}
+
+.markdown-preview.dark :deep(pre) {
+  background-color: #0d1117 !important;
+  border: 1px solid #30363d !important;
+}
+
+.markdown-preview:not(.dark) :deep(code) {
+  background-color: rgba(175, 184, 193, 0.2) !important;
+  color: #24292e !important;
+}
+
+.markdown-preview.dark :deep(code) {
+  background-color: rgba(110, 118, 129, 0.4) !important;
+  color: #f0f6fc !important;
+}
+
+/* 代码块头部样式 */
+.markdown-preview:not(.dark) :deep(.code-block) {
+  background-color: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+}
+
+.markdown-preview.dark :deep(.code-block) {
+  background-color: #0d1117 !important;
+  border: 1px solid #30363d !important;
+}
+
+.markdown-preview:not(.dark) :deep(.code-header) {
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e1e4e8 !important;
+  color: #6a737d !important;
+}
+
+.markdown-preview.dark :deep(.code-header) {
+  background-color: #161b22 !important;
+  border-bottom: 1px solid #30363d !important;
+  color: #8b949e !important;
 }
 </style>
