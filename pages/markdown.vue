@@ -188,6 +188,11 @@ onMounted(() => {
   height: 100%;
 }
 
+/* 设置编辑器最小高度 */
+:deep(.cm-editor) {
+  min-height: 300px;
+}
+
 
 
 /* 暗色模式适配 */
