@@ -58,6 +58,24 @@
             </NuxtLink>
           </div>
         </nav>
+
+        <!-- 主题切换和底部区域 -->
+        <div class="p-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <!-- 主题切换按钮 -->
+          <Button 
+            @click="toggleTheme" 
+            variant="ghost" 
+            class="w-full justify-start mb-2"
+          >
+            <span class="text-lg">{{ isDark ? '☀️' : '🌙' }}</span>
+            <span v-if="!isCollapsed" class="ml-2">{{ isDark ? '浅色模式' : '深色模式' }}</span>
+          </Button>
+          
+          <!-- 网站信息 -->
+          <div v-if="!isCollapsed" class="text-xs text-gray-500 dark:text-gray-400 text-center">
+            Wawa Tools v1.0
+          </div>
+        </div>
       </div>
     </div>
 
@@ -70,10 +88,58 @@
 
 <script setup>
 const isCollapsed = ref(false);
+const isDark = ref(false);
+
+// 初始化主题
+onMounted(() => {
+  // 检查本地存储的主题设置
+  const savedTheme = localStorage.getItem('wawa-theme');
+  if (savedTheme) {
+    isDark.value = savedTheme === 'dark';
+  } else {
+    // 检查系统偏好
+    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  applyTheme();
+});
 
 function toggleSidebar() {
   isCollapsed.value = !isCollapsed.value;
 }
+
+function toggleTheme() {
+  isDark.value = !isDark.value;
+  applyTheme();
+  // 保存到本地存储
+  localStorage.setItem('wawa-theme', isDark.value ? 'dark' : 'light');
+}
+
+function applyTheme() {
+  if (isDark.value) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}
+
+// 监听系统主题变化
+onMounted(() => {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const handleChange = (e) => {
+    // 只有在没有手动设置主题时才跟随系统
+    if (!localStorage.getItem('wawa-theme')) {
+      isDark.value = e.matches;
+      applyTheme();
+    }
+  };
+  
+  mediaQuery.addEventListener('change', handleChange);
+  
+  // 清理监听器
+  onUnmounted(() => {
+    mediaQuery.removeEventListener('change', handleChange);
+  });
+});
 </script>
 
 <style scoped>
