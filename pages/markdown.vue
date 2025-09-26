@@ -56,6 +56,7 @@ import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/github-dark.css';
 import 'github-markdown-css/github-markdown.css';
+import 'github-markdown-css/github-markdown-dark.css';
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
@@ -182,74 +183,22 @@ onMounted(() => {
   max-width: none;
 }
 
-/* 确保 markdown-body 样式正确应用 */
+/* Markdown 预览区域样式 */
 .markdown-preview :deep(.markdown-body) {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-size: 16px;
-  line-height: 1.5;
-  word-wrap: break-word;
-  background-color: #ffffff;
-  color: #24292e;
   padding: 16px;
   border-radius: 6px;
 }
 
-/* 亮色主题下的 markdown 预览样式 */
+/* 亮色主题使用默认样式 */
 .markdown-preview:not(.dark) :deep(.markdown-body) {
   background-color: #ffffff;
-  color: #24292e;
 }
 
-.markdown-preview:not(.dark) :deep(.markdown-body h1),
-.markdown-preview:not(.dark) :deep(.markdown-body h2),
-.markdown-preview:not(.dark) :deep(.markdown-body h3),
-.markdown-preview:not(.dark) :deep(.markdown-body h4),
-.markdown-preview:not(.dark) :deep(.markdown-body h5),
-.markdown-preview:not(.dark) :deep(.markdown-body h6) {
-  color: #24292e;
-  border-bottom-color: #eaecef;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body code) {
-  background-color: rgba(175, 184, 193, 0.2);
-  color: #24292e;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body pre) {
-  background-color: #f6f8fa;
-  border: 1px solid #e1e4e8;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body blockquote) {
-  border-left-color: #dfe2e5;
-  background-color: #f6f8fa;
-  color: #6a737d;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body table) {
-  border-color: #dfe2e5;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body th),
-.markdown-preview:not(.dark) :deep(.markdown-body td) {
-  border-color: #dfe2e5;
-}
-
-.markdown-preview:not(.dark) :deep(.markdown-body tr:nth-child(2n)) {
-  background-color: #f6f8fa;
-}
-
-/* 恢复列表标记符号 */
-.markdown-preview :deep(.markdown-body ul) {
-  list-style-type: disc;
-}
-
-.markdown-preview :deep(.markdown-body ol) {
-  list-style-type: decimal;
-}
-
-.markdown-preview :deep(.markdown-body li) {
-  margin: 0.25em 0;
+/* 暗色主题使用 github-markdown-dark.css 提供的样式 */
+.markdown-preview.dark :deep(.markdown-body) {
+  /* 使用 github-markdown-dark.css 提供的暗色主题 */
+  background-color: #0d1117;
+  color: #f0f6fc;
 }
 
 /* 编辑器区域样式优化 */
@@ -288,54 +237,6 @@ onMounted(() => {
 }
 
 
-
-/* 暗色模式下的 markdown 预览样式 */
-.markdown-preview.dark :deep(.markdown-body) {
-  color-scheme: dark;
-  background-color: #1f2937;
-  color: #f9fafb;
-  padding: 16px;
-  border-radius: 6px;
-}
-
-.markdown-preview.dark :deep(.markdown-body h1),
-.markdown-preview.dark :deep(.markdown-body h2),
-.markdown-preview.dark :deep(.markdown-body h3),
-.markdown-preview.dark :deep(.markdown-body h4),
-.markdown-preview.dark :deep(.markdown-body h5),
-.markdown-preview.dark :deep(.markdown-body h6) {
-  color: #f9fafb;
-  border-bottom-color: #374151;
-}
-
-.markdown-preview.dark :deep(.markdown-body code) {
-  background-color: #374151;
-  color: #f9fafb;
-}
-
-.markdown-preview.dark :deep(.markdown-body pre) {
-  background-color: #111827;
-  border: 1px solid #374151;
-}
-
-.markdown-preview.dark :deep(.markdown-body blockquote) {
-  border-left-color: #4b5563;
-  background-color: #374151;
-  color: #d1d5db;
-}
-
-.markdown-preview.dark :deep(.markdown-body table) {
-  border-color: #374151;
-}
-
-.markdown-preview.dark :deep(.markdown-body th),
-.markdown-preview.dark :deep(.markdown-body td) {
-  border-color: #374151;
-}
-
-.markdown-preview.dark :deep(.markdown-body tr:nth-child(2n)) {
-  background-color: #1f2937;
-}
 
 /* 代码高亮主题切换 */
 .markdown-preview:not(.dark) :deep(.hljs) {
