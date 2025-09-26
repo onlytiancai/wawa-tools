@@ -16,6 +16,7 @@
 
             <div class="flex-1 min-h-0">
               <Codemirror 
+                @ready="onReady"
                 v-model="markdownText" 
                 :extensions="extensions"
                 class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -33,7 +34,7 @@
             </div>
 
             <div class="flex-1 min-h-0 overflow-y-auto">
-              <div class="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 markdown-preview">
+              <div class="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 markdown-preview" :class="{ dark: isDark }">
                 <div class="markdown-body" v-html="htmlPreview"></div>
               </div>
             </div>
@@ -53,14 +54,59 @@ import hljs from 'highlight.js';
 import { nextTick } from 'vue';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/github-dark.css';
 import 'github-markdown-css/github-markdown.css';
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
+import { EditorView } from '@codemirror/view'
+import { darkLineNumberTheme, lightLineNumberTheme } from '../lib/utils.ts'
+import { Compartment } from '@codemirror/state'
 
+const isDark = ref(false);
+const themeCompartment = new Compartment()
 const extensions = [
- markdown({ codeLanguages: languages })
+  markdown({ codeLanguages: languages }),
+  EditorView.lineWrapping,
+  themeCompartment.of(lightLineNumberTheme)
 ]
+
+let view = null
+function onReady(payload) {
+  view = payload.view
+}
+
+watch(isDark, (dark) => {
+  if (!view) return
+  view.dispatch({
+    effects: themeCompartment.reconfigure(dark ? darkLineNumberTheme : lightLineNumberTheme)
+  })
+})
+
+// 监听主题变化
+onMounted(() => {
+  // 初始检查主题
+  isDark.value = document.documentElement.classList.contains('dark');
+  
+  // 监听主题变化
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        isDark.value = document.documentElement.classList.contains('dark');
+      }
+    });
+  });
+  
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+  
+  // 清理监听器
+  onUnmounted(() => {
+    observer.disconnect();
+  });
+});
 
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
 
@@ -142,7 +188,55 @@ onMounted(() => {
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
-  background-color: transparent;
+  background-color: #ffffff;
+  color: #24292e;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+/* 亮色主题下的 markdown 预览样式 */
+.markdown-preview:not(.dark) :deep(.markdown-body) {
+  background-color: #ffffff;
+  color: #24292e;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body h1),
+.markdown-preview:not(.dark) :deep(.markdown-body h2),
+.markdown-preview:not(.dark) :deep(.markdown-body h3),
+.markdown-preview:not(.dark) :deep(.markdown-body h4),
+.markdown-preview:not(.dark) :deep(.markdown-body h5),
+.markdown-preview:not(.dark) :deep(.markdown-body h6) {
+  color: #24292e;
+  border-bottom-color: #eaecef;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body code) {
+  background-color: rgba(175, 184, 193, 0.2);
+  color: #24292e;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body pre) {
+  background-color: #f6f8fa;
+  border: 1px solid #e1e4e8;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body blockquote) {
+  border-left-color: #dfe2e5;
+  background-color: #f6f8fa;
+  color: #6a737d;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body table) {
+  border-color: #dfe2e5;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body th),
+.markdown-preview:not(.dark) :deep(.markdown-body td) {
+  border-color: #dfe2e5;
+}
+
+.markdown-preview:not(.dark) :deep(.markdown-body tr:nth-child(2n)) {
+  background-color: #f6f8fa;
 }
 
 /* 恢复列表标记符号 */
@@ -195,18 +289,60 @@ onMounted(() => {
 
 
 
-/* 暗色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .markdown-preview :deep(.markdown-body) {
-    color-scheme: dark;
-  }
-  
-  :deep(.cm-editor) {
-    background-color: #374151;
-  }
-  
-  :deep(.cm-content) {
-    color: #f3f4f6;
-  }
+/* 暗色模式下的 markdown 预览样式 */
+.markdown-preview.dark :deep(.markdown-body) {
+  color-scheme: dark;
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.markdown-preview.dark :deep(.markdown-body h1),
+.markdown-preview.dark :deep(.markdown-body h2),
+.markdown-preview.dark :deep(.markdown-body h3),
+.markdown-preview.dark :deep(.markdown-body h4),
+.markdown-preview.dark :deep(.markdown-body h5),
+.markdown-preview.dark :deep(.markdown-body h6) {
+  color: #f9fafb;
+  border-bottom-color: #374151;
+}
+
+.markdown-preview.dark :deep(.markdown-body code) {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+.markdown-preview.dark :deep(.markdown-body pre) {
+  background-color: #111827;
+  border: 1px solid #374151;
+}
+
+.markdown-preview.dark :deep(.markdown-body blockquote) {
+  border-left-color: #4b5563;
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.markdown-preview.dark :deep(.markdown-body table) {
+  border-color: #374151;
+}
+
+.markdown-preview.dark :deep(.markdown-body th),
+.markdown-preview.dark :deep(.markdown-body td) {
+  border-color: #374151;
+}
+
+.markdown-preview.dark :deep(.markdown-body tr:nth-child(2n)) {
+  background-color: #1f2937;
+}
+
+/* 代码高亮主题切换 */
+.markdown-preview:not(.dark) :deep(.hljs) {
+  background: #f6f8fa !important;
+}
+
+.markdown-preview.dark :deep(.hljs) {
+  background: #0d1117 !important;
 }
 </style>

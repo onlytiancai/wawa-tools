@@ -94,7 +94,7 @@ import 'vue3-json-viewer/dist/vue3-json-viewer.css'
 import { Codemirror } from 'vue-codemirror'
 import { json } from '@codemirror/lang-json'
 import { EditorView } from '@codemirror/view'
-import { darkLineNumberTheme, lightLineNumberTheme} from '../lib/utils'
+import { darkLineNumberTheme, lightLineNumberTheme} from '../lib/utils.ts'
 import { Compartment } from '@codemirror/state'
 
 
