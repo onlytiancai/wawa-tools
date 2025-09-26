@@ -1,39 +1,41 @@
 <template>
   <Sidebar>
-    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800">
-
+    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 dark:from-gray-900 dark:to-gray-800 overflow-auto">
 
       <!-- 编辑器区域 -->
-      <div class="flex flex-col h-[calc(100vh-120px)] w-full">
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-1 min-h-0 px-6">
+      <div class="w-full flex-1 min-h-0">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 px-6 py-6 h-full">
           <!-- 编辑区域 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col min-h-0">
-            <div class="flex items-center mb-4">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col h-full">
+            <div class="flex items-center mb-4 flex-shrink-0">
               <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
                 <span class="text-purple-600 dark:text-purple-400">✏️</span>
               </div>
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">编辑</h2>
             </div>
 
-            <Codemirror v-model="markdownText" :extensions="extensions" 
-            class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm resize-vertical focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-0"
-            />
-
-
+            <div class="flex-1 min-h-0">
+              <Codemirror 
+                v-model="markdownText" 
+                :extensions="extensions"
+                class="w-full h-full border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+            </div>
           </div>
 
           <!-- 预览区域 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col min-h-0">
-            <div class="flex items-center mb-4">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col h-full">
+            <div class="flex items-center mb-4 flex-shrink-0">
               <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mr-3">
                 <span class="text-pink-600 dark:text-pink-400">👁️</span>
               </div>
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">预览</h2>
             </div>
 
-            <div
-              class="flex-1 w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 overflow-auto markdown-preview min-h-0">
-              <div class="markdown-body" v-html="htmlPreview"></div>
+            <div class="flex-1 min-h-0 overflow-y-auto">
+              <div class="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 markdown-preview">
+                <div class="markdown-body" v-html="htmlPreview"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -61,6 +63,8 @@ const extensions = [
 ]
 
 const markdownText = ref('# Markdown 预览工具\n\n欢迎使用 **Wawa Tools** 的 Markdown 预览功能！\n\n## 功能特点\n\n- 实时预览\n- 简洁界面\n- 支持常用 Markdown 语法\n- 数学公式支持（KaTeX）\n\n### 数学公式示例\n\n行内公式：$E = mc^2$\n\n块级公式：\n$$\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n$$\n\n### 示例代码\n\n```javascript\nfunction hello() {\n  console.log("Hello, Markdown!");\n}\n```\n\n> 在左侧编辑，右侧实时预览效果');
+
+
 const htmlPreview = computed(() => {
     let html = marked.parse(markdownText.value);
     html = processMathFormulas(html);
@@ -144,7 +148,6 @@ onMounted(() => {
 /* 恢复列表标记符号 */
 .markdown-preview :deep(.markdown-body ul) {
   list-style-type: disc;
-
 }
 
 .markdown-preview :deep(.markdown-body ol) {
@@ -155,10 +158,50 @@ onMounted(() => {
   margin: 0.25em 0;
 }
 
+/* 编辑器区域样式优化 */
+:deep(.cm-editor) {
+  border-radius: 0.5rem;
+  height: 100%;
+}
+
+:deep(.cm-scroller) {
+  overflow: auto;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+:deep(.cm-content) {
+  min-height: 100%;
+}
+
+/* 高度控制样式 */
+:deep(.cm-editor .cm-scroller) {
+  height: 100%;
+}
+
+:deep(.cm-editor .cm-contentContainer) {
+  height: 100%;
+}
+
+:deep(.cm-editor .cm-gutters) {
+  height: 100%;
+}
+
+
+
 /* 暗色模式适配 */
 @media (prefers-color-scheme: dark) {
   .markdown-preview :deep(.markdown-body) {
     color-scheme: dark;
+  }
+  
+  :deep(.cm-editor) {
+    background-color: #374151;
+  }
+  
+  :deep(.cm-content) {
+    color: #f3f4f6;
   }
 }
 </style>
