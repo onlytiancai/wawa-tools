@@ -12,7 +12,7 @@ app.use(async (ctx, next) => {
   ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-router.get('/hello-node-koa', async (ctx) => {
+router.get('/', async (ctx) => {
   ctx.body = { message: 'Hello from Koa on Node Functions!' };
 });
 
