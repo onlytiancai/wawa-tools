@@ -72,6 +72,12 @@
 
       <!-- 底部信息 -->
       <div class="text-center mt-16">
+        <div class="mb-4">
+          <div class="inline-flex items-center bg-white dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm border border-gray-200 dark:border-gray-700">
+            <span class="text-gray-600 dark:text-gray-300 text-sm mr-2">访问次数:</span>
+            <span class="font-mono text-blue-600 dark:text-blue-400 font-semibold">{{ visitCount || '加载中...' }}</span>
+          </div>
+        </div>
         <p class="text-gray-500 dark:text-gray-400 text-sm">
           基于 Nuxt 3 + Tailwind CSS + shadcn-vue 构建
         </p>
@@ -82,7 +88,19 @@
 </template>
 
 <script setup>
-// 页面逻辑可以在这里添加
+// 访问计数器
+const { data: visitCount, error } = await useFetch('/edge-api/visit', {
+  key: 'visit-count',
+  server: false, // 在客户端执行
+  transform: (data) => {
+    return data?.visitCount || 0
+  }
+})
+
+// 错误处理
+if (error.value) {
+  console.error('获取访问次数失败:', error.value)
+}
 </script>
 
 <style scoped>
