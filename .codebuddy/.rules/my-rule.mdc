@@ -1,91 +1,126 @@
----
-description: 
-globs:
-alwaysApply: true
----
-# Wawa Tools 项目规则
+# Wawa Tools 项目规范
 
 ## 项目概述
-这是一个基于 Nuxt 3 的在线工具集合项目，集成了 Tailwind CSS 和 shadcn-nuxt UI 组件库。
+Wawa Tools 是一个基于 Nuxt 3 的在线工具集合项目，集成了 Tailwind CSS v4 和 shadcn-nuxt UI 组件库。项目提供了多种实用工具，如 Markdown 预览、JSON 格式化等功能，并支持暗色模式。
 
-## 技术栈规范
+## 技术栈
 
-### Nuxt 3 项目结构
+### 核心框架
+- **Nuxt 3**: 基于 Vue 3 的全栈框架
+- **Vue 3**: 使用 Composition API 和 `<script setup>` 语法
+- **TypeScript**: 提供类型安全
+
+### UI 框架
+- **Tailwind CSS v4**: 使用 OKLCH 色彩空间
+- **shadcn-nuxt**: UI 组件库，组件位于 `@/components/ui` 目录
+
+### 功能库
+- **CodeMirror 6**: 代码编辑器
+- **marked**: Markdown 解析
+- **KaTeX**: 数学公式渲染
+- **highlight.js**: 代码高亮
+- **Koa**: 服务端 API
+
+## 项目结构
+
 ```
-pages/           # 页面组件
-components/      # 通用组件
-assets/          # 静态资源
-lib/             # 工具函数
-server/          # 服务端API
+wawa-tools/
+├── assets/            # 静态资源
+│   └── css/           # CSS 文件，包括 Tailwind 配置
+├── components/        # 组件
+│   └── ui/            # shadcn-nuxt UI 组件
+├── edge-functions/    # Edge API 函数
+├── lib/               # 工具函数
+├── node-functions/    # Node.js API 函数
+├── pages/             # 页面组件
+├── public/            # 公共静态文件
+└── server/            # 服务端 API
 ```
 
-### Tailwind CSS 使用规范
-- 使用 Tailwind CSS v4.x
-- 颜色系统基于 OKLCH 色彩空间
-- 支持暗色模式切换
-- 响应式设计优先
-
-### shadcn-nuxt 组件规范
-- 组件前缀：空（默认）
-- 组件目录：`@/components/ui`
-- 使用 Composition API (`<script setup>`)
-- 遵循 Vue 3 最佳实践
-
-## 代码编写规范
+## 代码规范
 
 ### Vue 组件结构
+
 ```vue
 <template>
-  <!-- 语义化HTML结构 -->
+  <!-- 语义化 HTML 结构 -->
 </template>
 
 <script setup>
-// Composition API - 使用 Nuxt 自动导入功能
-// ref, onMounted 等 Vue API 无需显式导入
-// useState, useFetch 等 Nuxt 组合式函数无需显式导入
-// 仅在需要自定义导入时才使用 import 语句
-// components 无需显式导入
+// 使用 Nuxt 自动导入功能
+// Vue API (ref, computed 等) 无需显式导入
+// Nuxt 组合式函数 (useState, useFetch 等) 无需显式导入
+// 组件无需显式导入
 </script>
 
 <style scoped>
-/* Scoped样式 */
+/* 组件作用域样式 */
 </style>
 ```
 
-### Nuxt 自动导入规范
-- 使用 `ref`, `computed`, `watch` 等 Vue API 时无需显式导入
-- 使用 `useState`, `useFetch` 等 Nuxt 组合式函数时无需显式导入
-- 仅在需要自定义导入时才使用 `import` 语句
+### Tailwind CSS 使用规范
+
+- 优先使用 Tailwind 类名进行样式设计
+- 使用 OKLCH 色彩空间定义颜色
+- 支持暗色模式，使用 `dark:` 前缀
+- 响应式设计使用 `sm:`, `md:`, `lg:`, `xl:` 前缀
+
+### 组件命名规范
+
+- 组件文件名：使用 PascalCase（大驼峰）命名，如 `Button.vue`
+- 页面文件名：使用 kebab-case（短横线）命名，如 `markdown.vue`
+- 组件导入：使用 Nuxt 自动导入功能，无需显式导入
+
+### 状态管理
+
+- 使用 Vue 3 的 Composition API
+- 页面级状态使用 `ref`, `reactive`, `computed` 等
+- 应用级状态使用 Nuxt 的 `useState` 组合式函数
 
 ### 样式规范
-- 优先使用 Tailwind CSS 类名
-- 必要时使用自定义 CSS 变量
-- 保持样式模块化（scoped）
-- 支持暗色模式主题
 
-### 组件命名
-- 使用 PascalCase（大驼峰）命名
-- 文件名与组件名保持一致
-- 页面组件使用 kebab-case（短横线）
+- 组件样式使用 `scoped` 属性限制作用域
+- 全局样式定义在 `assets/css/tailwind.css`
+- 深度选择器使用 `:deep()` 语法
+- 支持暗色模式，使用 `.dark` 类选择器
 
-## 开发工作流
+## 功能开发规范
 
 ### 新增工具页面
-1. 在 `pages/` 目录创建新页面
-2. 在首页添加导航链接
+
+1. 在 `pages/` 目录创建新页面，使用 kebab-case 命名
+2. 在首页 (`pages/index.vue`) 添加导航链接
 3. 更新项目描述和元数据
 
 ### 添加新组件
+
 1. 使用 `npx shadcn-vue add` 命令添加组件
-2. 在 `components/ui/` 目录管理
+2. 组件放置在 `components/ui/` 目录
 3. 遵循组件设计系统规范
 
+### API 开发
+
+1. Edge API 函数放置在 `edge-functions/` 目录
+2. Node.js API 函数放置在 `node-functions/` 目录
+3. 服务端 API 放置在 `server/api/` 目录
+
+## 性能优化
+
+- 使用 Nuxt 的自动导入功能减少导入语句
+- 组件按需加载，避免不必要的全局注册
+- 图片资源优化，使用适当的格式和大小
+- 代码分割，减少初始加载时间
+
 ## 部署规范
+
 - 使用 `npm run build` 构建项目
 - 使用 `npm run preview` 预览构建结果
-- 支持静态站点生成（SSG）
+- 支持静态站点生成 (SSG)
 
-## 注意事项
+## 最佳实践
+
 - 确保所有工具功能在客户端可用
-- 保持代码的树摇优化（Tree-shaking）
+- 保持代码的树摇优化 (Tree-shaking)
 - 遵循 Vue 3 和 Nuxt 3 的最佳实践
+- 编写清晰的注释和文档
+- 保持代码的可维护性和可扩展性
