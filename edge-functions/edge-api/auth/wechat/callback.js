@@ -6,9 +6,7 @@ export async function onRequest({ request, params, env }) {
 
   try {
     // 获取请求体中的 code 和 state
-    const url = new URL(request.url);
-    const code = url.searchParams.get('code');
-    const state = url.searchParams.get('state');
+    const { code, state } = await request.json();
 
     console.error('wechat callback code, state', code, state);
 

@@ -3,7 +3,7 @@ export function getWechatConfig(env) {
   return {
     appId: env.WECHAT_APP_ID,
     appSecret: env.WECHAT_APP_SECRET,
-    redirectUri: env.WECHAT_REDIRECT_URI || 'http://mp.ihuhao.com/edge-api/auth/wechat/callback',
+    redirectUri: env.WECHAT_REDIRECT_URI || 'http://mp.ihuhao.com/auth/wechat-callback',
     authorizeUrl: 'https://open.weixin.qq.com/connect/qrconnect',
     accessTokenUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token',
     userInfoUrl: 'https://api.weixin.qq.com/sns/userinfo',
