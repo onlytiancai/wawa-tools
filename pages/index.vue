@@ -2,16 +2,22 @@
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
     <div class="container mx-auto px-4 py-12">
       <!-- 头部区域 -->
-      <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center w-20 h-20 bg-white dark:bg-gray-800 rounded-full shadow-lg mb-6">
-          <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">🐸</span>
+      <div class="flex justify-between items-center mb-12">
+        <div class="flex-1"></div>
+        <div class="text-center flex-grow-[2]">
+          <div class="inline-flex items-center justify-center w-20 h-20 bg-white dark:bg-gray-800 rounded-full shadow-lg mb-6">
+            <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">🐸</span>
+          </div>
+          <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            Wawa Tools
+          </h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            一站式在线工具集合，为开发者提供便捷高效的解决方案
+          </p>
         </div>
-        <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-          Wawa Tools
-        </h1>
-        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          一站式在线工具集合，为开发者提供便捷高效的解决方案
-        </p>
+        <div class="flex-1 flex justify-end">
+          <UserLogin />
+        </div>
       </div>
 
       <!-- 功能展示区域 -->

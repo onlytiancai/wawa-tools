@@ -1,3 +1,8 @@
+---
+description: 
+globs:
+alwaysApply: true
+---
 # Wawa Tools 项目规范
 
 ## 项目概述
@@ -102,7 +107,8 @@ wawa-tools/
 
 1. Edge API 函数放置在 `edge-functions/` 目录
 2. Node.js API 函数放置在 `node-functions/` 目录
-3. 服务端 API 放置在 `server/api/` 目录
+3. 本项目不使用 Nuxt 的 server 功能， 不要在 `server/api/` 目录下写代码，默认后端用 edge function 实现
+4. 默认后台存储只能使用 kv 存储，不能使用数据库，参考 edge-functions/edge-api/visit.js
 
 ## 性能优化
 

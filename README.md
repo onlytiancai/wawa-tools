@@ -88,3 +88,12 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
     npm install tailwindcss @tailwindcss/vite --save-dev
     npx shadcn-vue@latest init
     npx shadcn-vue@latest add button  
+
+# 配置
+
+在部署前，请确保在 EdgeOne 或 Cloudflare Workers 中设置了以下环境变量：
+
+WECHAT_APP_ID: 微信开放平台应用的 AppID
+WECHAT_APP_SECRET: 微信开放平台应用的 AppSecret
+WECHAT_REDIRECT_URI: 微信授权回调地址
+JWT_SECRET_KEY: 用于生成和验证 JWT token 的密钥
